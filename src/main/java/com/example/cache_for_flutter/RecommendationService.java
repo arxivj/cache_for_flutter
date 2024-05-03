@@ -1,10 +1,8 @@
 package com.example.cache_for_flutter;
-
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.RestClientException;
-
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -18,6 +16,7 @@ public class RecommendationService {
 
     public RecommendationService(RecommendationRepository repository) {
         this.repository = repository;
+        fetchAndSaveRecommendations();  // Fetch data when the service is initialized
     }
 
     public List<Recommendation> getAllRecommendations() {
@@ -27,7 +26,7 @@ public class RecommendationService {
     public void fetchAndSaveRecommendations() {
         boolean success = fetchAndSave();
         if (!success) {
-            logger.warning("재시도...");
+            logger.warning("Retrying... ㅇㅇㅇ");
             fetchAndSave();
         }
     }
@@ -45,8 +44,8 @@ public class RecommendationService {
         return false;
     }
 
-    //    @Scheduled(cron = "0 0 0 * * ?")
-    @Scheduled(cron = " */5 * * * * *")
+    @Scheduled(cron = "0 0 0 * * ?")
+    // @Scheduled(cron = "*/5 * * * * *")
     public void scheduleFetchAndSaveRecommendations() {
         fetchAndSaveRecommendations();
     }
